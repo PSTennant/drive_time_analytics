@@ -13,7 +13,7 @@ tx_tract_mhv <- readRDS("data/tx_tract_mhv.rds")
 # Define UI for application
 ui <- fluidPage(
   titlePanel("Texas Drive Time Neighborhood Analysis"),
-  theme = shinytheme("slate"),  # Add a dark theme
+  theme = shinytheme("spacelab"),  # Add theme
   sidebarLayout(
     sidebarPanel(
       textInput("address", "Enter Address"),
