@@ -27,15 +27,14 @@ ui <- fluidPage(
       ),
       selectInput("traffic", "Traffic Level", choices = c("Low", "Moderate", "High"), selected = "Moderate"),
       selectInput(
-        "metric", "Metric",
+        "metric", "Metric", 
         choices = c(
-          "hmda_tract_median_age_of_housing_units",
-          "acs_median_gross_rent" ,
-          "acs_median_home_value",
-          "hmda_median_loan_amount"
-        ),
-        selected = "Home Value (ACS)"
-      ),
+          "Median Home Value (ACS)", 
+          "Median Gross Rent (ACS)", 
+          "Median Loan Amount (HMDA)", 
+          "Median Age of Housing Units (HMDA)"
+        ), 
+        selected = "Median Age of Housing Units (HMDA)"),
       actionButton("submit", "Submit")
     ),
     mainPanel(
@@ -43,37 +42,43 @@ ui <- fluidPage(
       style = "height: 100vh;",
       leafletOutput("map", height = "100%")
     )
-  )
-)
+))
 
 # Define server logic
 server <- function(input, output) {
+
+  metric_name <- eventReactive(input$submit, {
+    metric_name <- input$metric
+    return(metric_name)
+  })
+
+  metric_var <- eventReactive(input$submit, {
+
+    if (input$metric == "Median Home Value (ACS)") {
+      metric_var <- "acs_median_home_value"
+    }
+    if (input$metric == "Median Gross Rent (ACS)") {
+      metric_var <- "acs_median_gross_rent"
+    }
+    if (input$metric == "Median Loan Amount (HMDA)") {
+      metric_var <- "hmda_median_loan_amount"
+    }
+    if (input$metric == "Median Age of Housing Units (HMDA)") {
+      metric_var <- "hmda_tract_median_age_of_housing_units"
+    }
+
+    return(metric_var)
+
+  })
+
   df <- eventReactive(input$submit, {
-
-    # if (input$metric == "Age of Housing Units (HMDA)") {
-    #   metric_var <- "hmda_tract_median_age_of_housing_units"
-    # }
-
-    # if (input$metric == "Gross Rent (ACS)") {
-    #   metric_var <- "acs_median_gross_rent" 
-    # }
-
-    # if (input$metric == "Home Value (ACS)") {
-    #   metric_var <- "acs_median_home_value"
-    # }
-
-    # if (input$metric == "Median Loan Amount (HMDA)") {
-    #   metric_var <- "hmda_median_loan_amount"
-    # }
 
     if (input$traffic == "Low") {
       depart_at_var <- "2025-03-01T08:00"
     }
-
     if (input$traffic == "Moderate") {
       depart_at_var <- "2025-03-03T14:00"
     }
-
     if (input$traffic == "High") {
       depart_at_var <- "2025-03-05T17:30"
     }
@@ -95,11 +100,14 @@ server <- function(input, output) {
     # req(df()) is a reactive expression that returns NULL if df() is not available,
     # and the value of df() if it is. This is used to prevent the map from rendering
     # until the user has submitted an address and a drive time.
+    
+    validate(need(length(df()) > 0, "Please enter a known address in Texas."))    
+
     pal <- colorRampPalette(c("#CCCCCC", "#293064"))
     df() %>%
       select(
         census_tract, # Using the rlang package to use the value of metric_var,
-        estimate = input$metric,
+        estimate = metric_var(),
         geometry
       ) %>%
       drop_na() %>%
@@ -116,8 +124,9 @@ server <- function(input, output) {
           "Census Tract: ", census_tract
         ),
         popup = ~ paste0(
-          "Census Tract: ", census_tract,
-          ", Median Home Value: ", estimate
+          "<b>Census Tract: </b>", census_tract, 
+          "<br>",
+          "<b>", metric_name(), ": </b>", estimate
         )
       )
   })
