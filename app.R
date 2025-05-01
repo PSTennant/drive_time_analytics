@@ -12,6 +12,11 @@ library(htmltools)
 tract_data <- readRDS("data/tract_data.rds")
 tract_data <- st_as_sf(tract_data)
 
+# Setting mapboxapi key
+if(!interactive()){
+  mapboxapi::mapbox_access_token(Sys.getenv("mapbox_api_token"))
+}
+
 # Define UI for application
 ui <- fluidPage(
   titlePanel("Texas Drive Time Neighborhood Analysis"),
