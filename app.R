@@ -110,6 +110,11 @@ server <- function(input, output) {
         estimate = metric_var(),
         geometry
       ) %>%
+      mutate(estimate_fmtd = case_when(
+        metric_name() == "Median Home Value (ACS)" ~ scales::dollar(estimate),
+        metric_name() == "Median Gross Rent (ACS)" ~ scales::dollar(estimate),
+        metric_name() == "Median Loan Amount (HMDA)" ~ scales::dollar(estimate),
+        metric_name() == "Median Age of Housing Units (HMDA)" ~ paste(estimate, "years old"))) %>%
       drop_na() %>%
       leaflet() %>%
       addProviderTiles(providers$CartoDB.DarkMatter) %>%
@@ -126,7 +131,7 @@ server <- function(input, output) {
         popup = ~ paste0(
           "<b>Census Tract: </b>", census_tract, 
           "<br>",
-          "<b>", metric_name(), ": </b>", estimate
+          "<b>", metric_name(), ": </b>", estimate_fmtd
         )
       )
   })
