@@ -13,8 +13,8 @@ tract_data <- readRDS("data/tract_data.rds")
 tract_data <- st_as_sf(tract_data)
 
 # Setting mapboxapi key
-if(!interactive()){
-  mapboxapi::mb_access_token(Sys.getenv("mapbox_api_token"), install = TRUE)
+if (Sys.getenv("mapbox_api_token") != "") {
+  mapboxapi::mb_access_token(Sys.getenv("mapbox_api_token"), install = TRUE, overwrite = TRUE)
 }
 
 # Define UI for application
