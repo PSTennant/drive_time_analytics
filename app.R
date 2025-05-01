@@ -14,7 +14,7 @@ tract_data <- st_as_sf(tract_data)
 
 # Setting mapboxapi key
 if(!interactive()){
-  mapboxapi::mapbox_access_token(Sys.getenv("mapbox_api_token"))
+  mapboxapi::mb_access_token(Sys.getenv("mapbox_api_token"))
 }
 
 # Define UI for application
