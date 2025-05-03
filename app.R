@@ -45,10 +45,10 @@ ui <- fluidPage(
       width = 9, height = "100vh",
       style = "height: 100vh;",
       shinycssloaders::withSpinner(
-        leafletOutput("map", height = "100%"),
-        type = 8,
-        color = "#0275D8",
-        size = 1.5
+        leafletOutput("map", height = "800px"),
+        type = 6,
+        color = "#293064",
+        size = 1.25
       )
     )
 ))
