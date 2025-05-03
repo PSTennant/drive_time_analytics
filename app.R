@@ -12,10 +12,8 @@ library(htmltools)
 tract_data <- readRDS("data/tract_data.rds")
 tract_data <- st_as_sf(tract_data)
 
-# Setting mapboxapi key
-if (Sys.getenv("mapbox_api_token") != "") {
-  mapboxapi::mb_access_token(Sys.getenv("mapbox_api_token"), install = TRUE, overwrite = TRUE)
-}
+# Set Mapbox Access Token
+mb_access_token(Sys.getenv("mapbox_api_token"), install = TRUE)
 
 # Define UI for application
 ui <- fluidPage(
@@ -51,7 +49,7 @@ ui <- fluidPage(
 
 # Define server logic
 server <- function(input, output) {
-
+  
   metric_name <- eventReactive(input$submit, {
     metric_name <- input$metric
     return(metric_name)
