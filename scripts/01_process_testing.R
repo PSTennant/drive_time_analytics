@@ -22,7 +22,7 @@ library(leaflet)
 #   profile = "driving",
 #   time = 20)
 # saveRDS(sccc20, "data/sccc20.rds")
-sccc20 <- readRDS("data/sccc20.rds")
+sccc20 <- readRDS("archive/sccc20.rds")
 # sccc20
 
 # Tract Content Data

@@ -7,6 +7,7 @@ library(shiny)
 library(shinythemes)
 library(leaflet)
 library(htmltools)
+library(shinycssloaders)
 
 # Loading tract data
 tract_data <- readRDS("data/tract_data.rds")
@@ -43,7 +44,12 @@ ui <- fluidPage(
     mainPanel(
       width = 9, height = "100vh",
       style = "height: 100vh;",
-      leafletOutput("map", height = "100%")
+      shinycssloaders::withSpinner(
+        leafletOutput("map", height = "100%"),
+        type = 8,
+        color = "#0275D8",
+        size = 1.5
+      )
     )
 ))
 
