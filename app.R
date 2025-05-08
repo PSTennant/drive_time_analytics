@@ -14,7 +14,9 @@ tract_data <- readRDS("data/tract_data.rds")
 tract_data <- st_as_sf(tract_data)
 
 # Set Mapbox Access Token
-mb_access_token(Sys.getenv("mapbox_api_token"), install = TRUE, overwrite = TRUE)
+if(!interactive()) {
+  mb_access_token(Sys.getenv("mapbox_api_token"), install = TRUE, overwrite = TRUE)
+}
 
 # Define UI for application
 ui <- fluidPage(
